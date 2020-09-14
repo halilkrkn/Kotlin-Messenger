@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FF9800"
+    tools:context=".RegisterActivity">
+
+    <EditText
+        android:id="@+id/usernameRegisterEdittext"
+        android:layout_width="347dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="18dp"
+        android:textColor="@android:color/black"
+        android:background="@drawable/rounded_edittext_register_login"
+        android:ems="10"
+        android:hint="username"
+        android:inputType="textPersonName"
+        android:paddingLeft="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/emailRegisterEdittext"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/emailRegisterEdittext"
+        android:layout_width="347dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="18dp"
+        android:textColor="@android:color/black"
+        android:background="@drawable/rounded_edittext_register_login"
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="textPersonName"
+        android:paddingLeft="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/passwordRegisterEdittext"
+        app:layout_constraintEnd_toEndOf="@+id/usernameRegisterEdittext"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/usernameRegisterEdittext" />
+
+    <EditText
+        android:id="@+id/passwordRegisterEdittext"
+        android:layout_width="347dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="18dp"
+        android:textColor="@android:color/black"
+        android:background="@drawable/rounded_edittext_register_login"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPersonName|textPassword"
+        android:paddingLeft="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/registerButtonRegister"
+        app:layout_constraintEnd_toEndOf="@+id/emailRegisterEdittext"
+        app:layout_constraintStart_toStartOf="@+id/emailRegisterEdittext" />
+
+    <Button
+        android:id="@+id/registerButtonRegister"
+        android:layout_width="347dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/rounded_button_register_login"
+        android:onClick="register"
+        android:text="Register"
+        android:textAllCaps="true"
+        app:layout_constraintBottom_toTopOf="@+id/alreadyHaveAccountTextview"
+        app:layout_constraintEnd_toEndOf="@+id/passwordRegisterEdittext"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/passwordRegisterEdittext" />
+
+    <TextView
+        android:id="@+id/alreadyHaveAccountTextview"
+        android:layout_width="349dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="56dp"
+        android:gravity="center"
+        android:onClick="alreadyHaveAccount"
+        android:text="Already have an account?"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.483"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profileImageview"
+        android:layout_width="209dp"
+        android:layout_height="187dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginBottom="334dp"
+        android:onClick="uploadPhotoRegister"
+        android:src="@drawable/images"
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="2dp"
+        app:layout_constraintBottom_toTopOf="@+id/alreadyHaveAccountTextview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
