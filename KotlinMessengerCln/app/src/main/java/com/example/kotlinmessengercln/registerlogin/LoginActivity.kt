@@ -1,10 +1,12 @@
-package com.example.kotlinmessengercln
+package com.example.kotlinmessengercln.registerlogin
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.kotlinmessengercln.R
+import com.example.kotlinmessengercln.messages.LatestMessagesActivity
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
 
@@ -25,8 +27,8 @@ class LoginActivity : AppCompatActivity() {
         val currentUser = mAuth.currentUser
         if (currentUser != null){
             // Feed Activity gönderir
-           //val intent = Intent(applicationContext,LatestMessagesActivity::class.java)
-         //  startActivity(intent)
+            //val intent = Intent(applicationContext,LatestMessagesActivity::class.java)
+            //startActivity(intent)
           //  finish()
         }
     }
@@ -40,7 +42,8 @@ class LoginActivity : AppCompatActivity() {
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener { task ->
             if (task.isSuccessful){
                 //Feed Activity Intent
-                val intent = Intent(applicationContext,LatestMessagesActivity::class.java)
+                val intent = Intent(applicationContext,
+                    LatestMessagesActivity::class.java)
                startActivity(intent)
                finish()
             }
@@ -52,7 +55,8 @@ class LoginActivity : AppCompatActivity() {
 
     // Register ekranına geri dön
     fun backToRegister(view: View){
-        val intent = Intent(applicationContext,RegisterActivity::class.java)
+        val intent = Intent(applicationContext,
+            RegisterActivity::class.java)
         startActivity(intent)
         finish()
     }

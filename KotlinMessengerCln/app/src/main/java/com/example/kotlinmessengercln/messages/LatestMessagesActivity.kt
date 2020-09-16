@@ -1,4 +1,4 @@
-package com.example.kotlinmessengercln
+package com.example.kotlinmessengercln.messages
 
 import android.content.Intent
 import android.net.Uri
@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import com.example.kotlinmessengercln.registerlogin.LoginActivity
+import com.example.kotlinmessengercln.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -39,12 +41,14 @@ class LatestMessagesActivity : AppCompatActivity() {
         when (item.itemId){
             R.id.menu_new_messages -> {
                 // new Message Activity Intent
-                val intent = Intent(applicationContext,NewMessageActivity::class.java)
+                val intent = Intent(applicationContext,
+                    NewMessageActivity::class.java)
                 startActivity(intent)
             }
             R.id.menu_sign_out ->{
                 mAuth.signOut() // Kullanıcı Çıkışı oluşturuldu.
-                val intent = Intent(applicationContext,LoginActivity::class.java)
+                val intent = Intent(applicationContext,
+                    LoginActivity::class.java)
                 startActivity(intent)
             }
         }

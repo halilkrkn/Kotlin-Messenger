@@ -1,8 +1,11 @@
-package com.example.kotlinmessengercln
+package com.example.kotlinmessengercln.messages
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.example.kotlinmessengercln.adapter.NewMessageGroupAdapter
+import com.example.kotlinmessengercln.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.xwray.groupie.GroupAdapter
@@ -25,6 +28,10 @@ class NewMessageActivity : AppCompatActivity() {
         supportActionBar?.title = "Select User"
 
         fetchUsers()
+    }
+
+    companion object{
+        val USER_KEY= "USER_KEY"
     }
     private fun fetchUsers(){
 
@@ -58,7 +65,22 @@ class NewMessageActivity : AppCompatActivity() {
                             val username = it.get("username") as String
                             val profileImageUrl = it.get("downloadUrl") as String
 
-                            adapter.add(NewMessageGroupAdapter(username,profileImageUrl))
+                            adapter.add(
+                                NewMessageGroupAdapter(
+                                    username,
+                                    profileImageUrl
+                                )
+                            )
+
+                            adapter.setOnItemClickListener { item, view ->
+
+                                val intent = Intent(view.context,ChatLogActivity::class.java)
+                                intent.putExtra(USER_KEY,username)
+                                startActivity(intent)
+                                finish() // LatestNewMesage Activitye yönlendiriyor.
+
+
+                            }
                             recyclerView_newMessage.adapter = adapter
 
                         }

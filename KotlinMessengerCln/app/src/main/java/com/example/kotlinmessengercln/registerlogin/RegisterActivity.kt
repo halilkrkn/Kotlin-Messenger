@@ -1,7 +1,6 @@
-package com.example.kotlinmessengercln
+package com.example.kotlinmessengercln.registerlogin
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.ImageDecoder
@@ -9,12 +8,12 @@ import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Message
 import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.kotlinmessengercln.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -49,7 +48,8 @@ class RegisterActivity : AppCompatActivity() {
                 // Profil fotosunu Firebase de stroge(depoya) ve database ekleme
                 uploadProfilPhoto()
 
-               val intent = Intent(applicationContext,LoginActivity::class.java)
+               val intent = Intent(applicationContext,
+                   LoginActivity::class.java)
                startActivity(intent)
                finish()
             }
@@ -160,7 +160,8 @@ class RegisterActivity : AppCompatActivity() {
     // Eğer Kayıtlı ise Login ekranına yönlendirme
     fun alreadyHaveAccount(view: View){
 
-        val intent = Intent(applicationContext,LoginActivity::class.java)
+        val intent = Intent(applicationContext,
+            LoginActivity::class.java)
         startActivity(intent)
         finish()
 
