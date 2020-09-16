@@ -24,15 +24,17 @@ import java.util.*
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var mAuth : FirebaseAuth
-    var selectedImageUri : Uri? = null
-  //  private lateinit var selectedImageUri : Uri
     private lateinit var database : FirebaseFirestore
     private lateinit var storage : FirebaseStorage
+    var selectedImageUri : Uri? = null
+  //  private lateinit var selectedImageUri : Uri
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
-
+        storage = FirebaseStorage.getInstance()
+        database = FirebaseFirestore.getInstance()
         mAuth = FirebaseAuth.getInstance()
 
     }
@@ -44,11 +46,12 @@ class RegisterActivity : AppCompatActivity() {
 
         mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener { task ->
             if (task.isSuccessful){
+                // Profil fotosunu Firebase de stroge(depoya) ve database ekleme
+                uploadProfilPhoto()
 
-                val intent = Intent(applicationContext,LoginActivity::class.java)
-                startActivity(intent)
-                uploadProfilPhoto()  // Profil fotosunu Firebase de stroge(depoya) ve database ekleme
-                finish()
+               val intent = Intent(applicationContext,LoginActivity::class.java)
+               startActivity(intent)
+               finish()
             }
         }.addOnFailureListener { exception ->
             exception.printStackTrace()
@@ -57,47 +60,42 @@ class RegisterActivity : AppCompatActivity() {
 
     }
 
+    //Firebase Storge a Kayıt işlemleri
     fun uploadProfilPhoto(){
         //UUID : image name
 
-        val uuıd = UUID.randomUUID()
-        val imageName = "$uuıd.jpg"
+        val fileName = UUID.randomUUID()
+        val imageName = "$fileName.jpg"
 
-        val storage = FirebaseStorage.getInstance()
         val reference = storage.reference
         val imagesReference = reference.child("images").child(imageName)
 
         if (selectedImageUri != null){
             imagesReference.putFile(selectedImageUri!!).addOnSuccessListener { taskSnapshot ->
 
-                //Database - Firestore Kaydedilecek
+                //Database - Firestore Kayıt İşlemleri
                 val uploadedPictureRefence = FirebaseStorage.getInstance()
                     .reference.child("images")
                     .child(imageName)
 
                 uploadedPictureRefence.downloadUrl.addOnSuccessListener { uri ->
+
                     val downloadUrl = uri.toString()
-/*
-                    /// Database Firestore Kısmı
-                    val postMap = hashMapOf<String,Any>()
-                    postMap.put("downloadUrl", downloadUrl)
-                    postMap.put("userEmail", mAuth.currentUser!!.email.toString())
-                    postMap.put("username", usernameRegisterEdittext.text.toString())
-                    postMap.put("date",com.google.firebase.Timestamp.now())
 
-                    database.collection("Posts").add(postMap).addOnCompleteListener { task ->
-                        if (task.isComplete && task.isSuccessful){
-                            //Back
-                            finish()
-                        }
+                    //Firebase Database Firestore Kısmı
+                    // HashMap oluşturup Anahtar kelimelerinin değerlerini yazıyoruz.
+                    val users = hashMapOf<String,Any>()
+                    users.put("downloadUrl", downloadUrl)
+                    users.put("useremail", mAuth.currentUser!!.email.toString())
+                    users.put("username", usernameRegisterEdittext.text.toString())
+                    users.put("date",com.google.firebase.Timestamp.now())
+
+                    database.collection("Users").add(users).addOnCompleteListener { task ->
+
                     }.addOnFailureListener { exception ->
-                        Toast.makeText(applicationContext, exception.localizedMessage.toString(), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, exception.localizedMessage, Toast.LENGTH_SHORT).show()
                     }
-
- */
-
                 }
-
             }
         }
     }

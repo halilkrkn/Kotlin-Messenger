@@ -25,6 +25,9 @@ class LoginActivity : AppCompatActivity() {
         val currentUser = mAuth.currentUser
         if (currentUser != null){
             // Feed Activity gönderir
+           //val intent = Intent(applicationContext,LatestMessagesActivity::class.java)
+         //  startActivity(intent)
+          //  finish()
         }
     }
 
@@ -37,12 +40,13 @@ class LoginActivity : AppCompatActivity() {
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener { task ->
             if (task.isSuccessful){
                 //Feed Activity Intent
+                val intent = Intent(applicationContext,LatestMessagesActivity::class.java)
+               startActivity(intent)
+               finish()
             }
         }.addOnFailureListener { exception ->
-            if (exception != null){
-                exception.printStackTrace()
-                Toast.makeText(applicationContext, exception.localizedMessage, Toast.LENGTH_SHORT).show()
-            }
+            exception.printStackTrace()
+            Toast.makeText(applicationContext, exception.localizedMessage, Toast.LENGTH_SHORT).show()
         }
     }
 
