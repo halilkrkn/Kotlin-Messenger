@@ -1,4 +1,4 @@
-package com.example.kotlinmessengercln.registerlogin
+package com.example.kotlinmessengercln.registerLogin
 
 import android.app.Activity
 import android.content.Intent
@@ -14,10 +14,12 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.kotlinmessengercln.R
+import com.example.kotlinmessengercln.model.Users
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_register.*
+import java.sql.Timestamp
 import java.util.*
 
 class RegisterActivity : AppCompatActivity() {
@@ -47,9 +49,7 @@ class RegisterActivity : AppCompatActivity() {
             if (task.isSuccessful){
                 // Profil fotosunu Firebase de stroge(depoya) ve database ekleme
                 uploadProfilPhoto()
-
-               val intent = Intent(applicationContext,
-                   LoginActivity::class.java)
+               val intent = Intent(applicationContext,LoginActivity::class.java)
                startActivity(intent)
                finish()
             }
@@ -81,16 +81,28 @@ class RegisterActivity : AppCompatActivity() {
                 uploadedPictureRefence.downloadUrl.addOnSuccessListener { uri ->
 
                     val downloadUrl = uri.toString()
+                    val userId = database.collection("Users").document().id
+                    val useremail = mAuth.currentUser!!.email.toString()
+                    val username = usernameRegisterEdittext.text.toString()
+                    val date = com.google.firebase.Timestamp.now()
 
                     //Firebase Database Firestore Kısmı
                     // HashMap oluşturup Anahtar kelimelerinin değerlerini yazıyoruz.
-                    val users = hashMapOf<String,Any>()
+                  /*  val users = hashMapOf<String,Any>()
                     users.put("downloadUrl", downloadUrl)
                     users.put("useremail", mAuth.currentUser!!.email.toString())
                     users.put("username", usernameRegisterEdittext.text.toString())
+                    if (userId != null) {
+                        users.put("uid", userId)
+                    }
                     users.put("date",com.google.firebase.Timestamp.now())
 
-                    database.collection("Users").add(users).addOnCompleteListener { task ->
+                   */
+                    //Firebase Database Firestore Kısmı
+                    // model içerisindeki Users data class ından çektik.
+                    val users = Users(downloadUrl,useremail,username,userId,date )
+
+                    database.collection("Users").document(userId).set(users).addOnCompleteListener { task ->
 
                     }.addOnFailureListener { exception ->
                         Toast.makeText(applicationContext, exception.localizedMessage, Toast.LENGTH_SHORT).show()

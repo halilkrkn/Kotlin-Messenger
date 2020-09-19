@@ -1,4 +1,4 @@
-package com.example.kotlinmessengercln.registerlogin
+package com.example.kotlinmessengercln.registerLogin
 
 import android.content.Intent
 import android.os.Bundle

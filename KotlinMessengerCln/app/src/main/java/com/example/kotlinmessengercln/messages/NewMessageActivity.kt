@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import com.example.kotlinmessengercln.adapter.NewMessageGroupAdapter
 import com.example.kotlinmessengercln.R
+import com.example.kotlinmessengercln.model.Users
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.xwray.groupie.GroupAdapter
@@ -53,7 +54,7 @@ class NewMessageActivity : AppCompatActivity() {
 
                             val username = document.get("username") as String
                             val downloadUrl = document.get("downloadUrl") as String
-                            adapter.add(NewMessageGroupAdapter(username,downloadUrl))
+                             adapter.add(NewMessageGroupAdapter(Users(profileImageUrl,"",username,"")))
 
                             recyclerView_newMessage.adapter = adapter
 
@@ -64,18 +65,17 @@ class NewMessageActivity : AppCompatActivity() {
                         documents.forEach {
                             val username = it.get("username") as String
                             val profileImageUrl = it.get("downloadUrl") as String
+                            val userId  = it.get("userId") as String
 
-                            adapter.add(
-                                NewMessageGroupAdapter(
-                                    username,
-                                    profileImageUrl
-                                )
-                            )
+                            adapter.add(NewMessageGroupAdapter(Users(profileImageUrl,"",username,userId)))
+
 
                             adapter.setOnItemClickListener { item, view ->
 
-                                val intent = Intent(view.context,ChatLogActivity::class.java)
-                                intent.putExtra(USER_KEY,username)
+                                val userItem = item as NewMessageGroupAdapter
+                                val intent = Intent(view.context, ChatLogActivity::class.java)
+                                //intent.putExtra(USER_KEY,userItem.user.userId)
+                                intent.putExtra(USER_KEY,userItem.user)
                                 startActivity(intent)
                                 finish() // LatestNewMesage Activitye yönlendiriyor.
 

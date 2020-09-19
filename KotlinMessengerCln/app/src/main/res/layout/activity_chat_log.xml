@@ -33,6 +33,7 @@
         android:textColor="@android:color/white"
         android:textStyle="bold"
         android:text="Send"
+        android:onClick="performSendMessage"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
