@@ -4,11 +4,13 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.example.kotlinmessengercln.registerLogin.LoginActivity
 import com.example.kotlinmessengercln.R
 import com.example.kotlinmessengercln.model.Users
+import com.example.kotlinmessengercln.registerLogin.RegisterActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -21,7 +23,7 @@ class LatestMessagesActivity : AppCompatActivity() {
     var selectedImageUri : Uri? = null
 
     companion object{
-       var currentUser = Users("","","","")
+       var currentUser = Users()
     }
 
 
@@ -68,19 +70,48 @@ class LatestMessagesActivity : AppCompatActivity() {
         database = FirebaseFirestore.getInstance()
         storage = FirebaseStorage.getInstance()
 
-     //   fetchCurrentUser()
+        fetchCurrentUser()
+        //currentUser()
+        verifyUserIsLoggedIn()
 
     }
+    //Kullanıcı ilk girişini yaptıktan sonra otomatik girişi yapılacak.
+    fun currentUser(){
+        // Eğer kayıtlı ve ilk girşini yaptıysa artık ondan sonra güncel olarak girişi yapılacak
+        val currentUser = mAuth.currentUser
+        if (currentUser != null){
+            // Feed Activity gönderir
+            val intent = Intent(applicationContext,LatestMessagesActivity::class.java)
+            startActivity(intent)
+             finish()
+        }
+    }
 
-
-    private fun fetchCurrentUser(){
+    private fun verifyUserIsLoggedIn(){
         val uid = mAuth.uid
+        if (uid == null){
+            val intent = Intent(applicationContext,RegisterActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
+    }
+    private fun fetchCurrentUser(){
+        //val userId = database.collection("Users").document().id
         val ref = database.collection("Users")
         ref.addSnapshotListener { value, error ->
             if (error != null){
                 error.printStackTrace()
             }
-            if (value != null && !value.isEmpty){
+            if (value != null){
+                val documents = value.documents
+                for (document in documents){
+                    val getImageUrl = document.get("downloadUrl") as String
+
+                    currentUser = Users(getImageUrl)
+                   // Log.d("LatestMessages","Current User : ${currentUser.downloadUrl}")
+
+
+                }
 
             }
         }

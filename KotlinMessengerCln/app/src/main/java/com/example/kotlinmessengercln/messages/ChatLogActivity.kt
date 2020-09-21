@@ -25,7 +25,7 @@ class ChatLogActivity : AppCompatActivity() {
     private lateinit var storage : FirebaseStorage
 
      val adapter = GroupAdapter<ViewHolder>()
-     //var toUser = Users("","","","")
+     var toUser = Users("","","","")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_log)
@@ -38,7 +38,7 @@ class ChatLogActivity : AppCompatActivity() {
         storage = FirebaseStorage.getInstance()
 
         //val username = intent.getStringExtra(NewMessageActivity.USER_KEY)
-      val  toUser = intent.getParcelableExtra<Users>(NewMessageActivity.USER_KEY)
+       toUser = intent.getParcelableExtra<Users>(NewMessageActivity.USER_KEY)
         if (toUser != null){
             supportActionBar?.title = toUser.username
         }
@@ -62,15 +62,7 @@ class ChatLogActivity : AppCompatActivity() {
 
                     if (!snapshot.isEmpty){
 
-
-                        //  val chatMessage = ChatMessage("","","","")
                         val documentsMessage = snapshot.documents
-                        // val adapter = GroupAdapter<ViewHolder>()
-
-
-
-
-
 
                         for (document in documentsMessage){
 
@@ -85,11 +77,12 @@ class ChatLogActivity : AppCompatActivity() {
                                 if (frmMessageId.fromMessageId == FirebaseAuth.getInstance().uid){
                                     Log.d("ChatLogActivity", "111111111111")
                                     Log.d("ChatLogActivity", textMessage)
-
-                                    adapter.add(ChatLogFromAdapter(chatMessage))
+                                    val currentUser = LatestMessagesActivity.currentUser
+                                    adapter.add(ChatLogFromAdapter(chatMessage,Users(currentUser.downloadUrl)))
                                 }else {
                                     Log.d("ChatLogActivity", "22222222222")
-                                    adapter.add(ChatLogToAdapter(chatMessage))
+
+                                    adapter.add(ChatLogToAdapter(chatMessage,toUser))
                                 }
                             }
 
@@ -139,138 +132,7 @@ class ChatLogActivity : AppCompatActivity() {
 
 
     }
-/*
-    private fun setupDummyData(){
 
-        val adapter = GroupAdapter<ViewHolder>()
-        adapter.add(ChatLogFromAdapter("From Message"))
-        adapter.add(ChatLogToAdapter("To Message"))
-        adapter.add(ChatLogFromAdapter("From Message"))
-        adapter.add(ChatLogToAdapter("To Message"))
-        adapter.add(ChatLogFromAdapter("From Message"))
-        adapter.add(ChatLogToAdapter("To Message"))
-        adapter.add(ChatLogFromAdapter("From Message"))
-        adapter.add(ChatLogToAdapter("To Message"))
-        adapter.add(ChatLogFromAdapter("From Message"))
-        adapter.add(ChatLogToAdapter("To Message"))
-        recyclerViewChatLog.adapter = adapter
-    }
-
-     val databaseMessage = database.collection("Message")
-        databaseMessage.addSnapshotListener { snapshot, exception ->
-            if (exception != null){
-                exception.printStackTrace()
-                Toast.makeText(applicationContext, exception.localizedMessage, Toast.LENGTH_SHORT).show()
-            } else {
-                if (snapshot != null){
-
-                    if (!snapshot.isEmpty){
-
-
-                        val chatMessage = ChatMessage("","","","")
-                        val documentsMessage = snapshot.documents
-                        // val adapter = GroupAdapter<ViewHolder>()
-
-                        documentsMessage.forEach {
-
-                            val textMessage = it.get("text") as String
-
-                                val fromMessage = ChatMessage("",textMessage,"","")
-                                //val fromUser = intent.getParcelableExtra<Users>(NewMessageActivity.USER_KEY)
-                                adapter.add(ChatLogFromAdapter(fromMessage.text.toString()))
-
-                                // Burası çalışıyor.
-                                val toMessage = ChatMessage("",textMessage,"","")
-                                adapter.add(ChatLogToAdapter(toMessage.text.toString()))
-
-
-                            // recyclerViewChatLog.adapter = adapter
-
-                        }
-
-                    }
-                }
-// TODO: 19.09.2020 LastestMessagedan güncel kullanıcı biligisini çekeceksin
-
-
-            }
-
-
-        }
-
-
-
-
- */
-    /*
-
-         val databaseMessage = database.collection("Message")
-        databaseMessage.addSnapshotListener { snapshot, exception ->
-            if (exception != null){
-                exception.printStackTrace()
-                Toast.makeText(applicationContext, exception.localizedMessage, Toast.LENGTH_SHORT).show()
-            } else {
-                if (snapshot != null){
-
-                    if (!snapshot.isEmpty){
-
-
-                      //  val chatMessage = ChatMessage("","","","")
-                        val documentsMessage = snapshot.documents
-                        // val adapter = GroupAdapter<ViewHolder>()
-
-
-
-
-
-
-                            for (document in documentsMessage){
-
-                                val textMessage = document.get("text") as String
-                                val fromMessageId = document.get("fromMessageId") as String
-                                val toMessageId = document.get("toMessageId") as String
-                                val chatMessage = ChatMessage("",textMessage,"","")
-                                val frmMessageId = ChatMessage("","",fromMessageId,"")
-                                val toMessageID = ChatMessage("","","",toMessageId)
-                                if (textMessage != null){
-
-                                    if (frmMessageId.fromMessageId == FirebaseAuth.getInstance().uid){
-                                        Log.d("ChatLogActivity", "111111111111")
-                                        Log.d("ChatLogActivity", textMessage)
-
-                                        adapter.add(ChatLogFromAdapter(chatMessage))
-                                    }else {
-                                        Log.d("ChatLogActivity", "22222222222")
-                                        adapter.add(ChatLogToAdapter(chatMessage))
-                                    }
-                                }
-
-
-                               // val fromMessage = ChatMessage("",textMessage,"","")
-                                //val fromUser = intent.getParcelableExtra<Users>(NewMessageActivity.USER_KEY)
-                               // adapter.add(ChatLogFromAdapter(fromMessage))
-
-                            }
-
-
-                                // recyclerViewChatLog.adapter = adapter
-
-
-
-                    }
-                }
-// TODO: 19.09.2020 LastestMessagedan güncel kullanıcı biligisini çekeceksin
-
-
-            }
-
-
-        }
-
-
-
-
-     */
 }
 
 

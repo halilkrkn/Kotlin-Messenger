@@ -18,20 +18,10 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         mAuth = FirebaseAuth.getInstance()
-        curruntUser()
+
     }
 
-    //Kullanıcı ilk girişini yaptıktan sonra otomatik girişi yapılacak.
-    fun curruntUser(){
-        // Eğer kayıtlı ve ilk girşini yaptıysa artık ondan sonra güncel olarak girişi yapılacak
-        val currentUser = mAuth.currentUser
-        if (currentUser != null){
-            // Feed Activity gönderir
-            //val intent = Intent(applicationContext,LatestMessagesActivity::class.java)
-            //startActivity(intent)
-          //  finish()
-        }
-    }
+
 
     // Oluşturalan kullanıcı için Login işlemleri
     fun logIn(view: View){
