@@ -10,6 +10,4 @@ data class ChatMessage(
     val toMessageId: String? = null,
     val date: Timestamp? = null
 
-){
-    constructor() : this("","","","")
-}
+)

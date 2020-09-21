@@ -9,6 +9,7 @@ import com.example.kotlinmessengercln.R
 import com.example.kotlinmessengercln.model.Users
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_new_message.*
@@ -36,7 +37,7 @@ class NewMessageActivity : AppCompatActivity() {
     }
     private fun fetchUsers(){
 
-        val ref = database.collection("Users")
+        val ref = database.collection("Users").orderBy("date", Query.Direction.DESCENDING)
         ref.addSnapshotListener { snapshot, exception ->
             if (exception != null){
                 Toast.makeText(applicationContext, exception.localizedMessage, Toast.LENGTH_SHORT).show()
