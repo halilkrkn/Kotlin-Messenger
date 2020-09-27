@@ -9,30 +9,17 @@ import kotlinx.android.parcel.Parceler
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.user_row_message.view.*
 
+// kişileri seçme bölümü
 class NewMessageGroupAdapter(val user: Users): Item<ViewHolder>(){
 
-
+    // Burda oluşturduğumuz layoutu tanımlayıp getirdik.
     override fun getLayout(): Int {
         return R.layout.user_row_message
     }
 
+    // Model dosyasındaki Users data modeli içindeki username ve downloadUrl i usernametextViewNewMessage textView ında ve  usernameImageViewNewMessage imageView ında gösterdik
     override fun bind(viewHolder: ViewHolder, position: Int) {
         viewHolder.itemView.usernametextViewNewMessage.text = user.username
         Picasso.get().load(user.downloadUrl).into(viewHolder.itemView.usernameImageViewNewMessage)
     }
 }
-/*
-class NewMessageGroupAdapter(private val usernameArray: ArrayList<String>, private val profileImageUrl: ArrayList<String>): Item<ViewHolder>() {
-
-    override fun getLayout(): Int {
-        return R.layout.user_row_message
-    }
-
-    override fun bind(viewHolder: ViewHolder, position: Int) {
-        viewHolder.itemView.usernametextViewNewMessage.text = usernameArray[position]
-        Picasso.get().load(profileImageUrl[position]).into(viewHolder.itemView.usernameImageViewNewMessage)
-    }
-}
-
-
- */

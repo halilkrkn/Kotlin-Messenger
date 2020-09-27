@@ -63,6 +63,7 @@ class NewMessageActivity : AppCompatActivity() {
 
  */
                         // Yukardaki For Loop içerisindeki ile Aynı yöntem
+                        // Kullanıcı seçerken ki sayfaya üye olan kişilerin bilgilerini databaseden çektik ve gösterdik.
                         documents.forEach {
                             val username = it.get("username") as String
                             val profileImageUrl = it.get("downloadUrl") as String
@@ -70,7 +71,7 @@ class NewMessageActivity : AppCompatActivity() {
 
                             adapter.add(NewMessageGroupAdapter(Users(profileImageUrl,"",username,userId)))
 
-
+                        // Oluşturulan row lara tıklama işlemleri yapıldı
                             adapter.setOnItemClickListener { item, view ->
 
                                 val userItem = item as NewMessageGroupAdapter

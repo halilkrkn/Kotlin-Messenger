@@ -19,6 +19,18 @@ class LoginActivity : AppCompatActivity() {
 
         mAuth = FirebaseAuth.getInstance()
 
+     /* Güncel Kullanıcı ise Otomatik giriş İşlemi
+
+        val currentUser = mAuth.currentUser
+        if (currentUser != null){
+
+            val intent = Intent(applicationContext,LatestMessagesActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+      */
+
     }
 
 

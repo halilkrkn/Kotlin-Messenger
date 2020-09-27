@@ -2,6 +2,7 @@ package com.example.kotlinmessengercln.model
 
 import com.google.firebase.Timestamp
 
+//Firestore Mesajlaşma(ChatMessage) veritabanı modeli
 data class ChatMessage(
 
     val chatId: String? = null,

@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import com.example.kotlinmessengercln.R
 import com.example.kotlinmessengercln.adapter.ChatLogFromAdapter
 import com.example.kotlinmessengercln.adapter.ChatLogToAdapter
@@ -25,7 +24,7 @@ class ChatLogActivity : AppCompatActivity() {
     private lateinit var storage : FirebaseStorage
 
      val adapter = GroupAdapter<ViewHolder>()
-     var toUser = Users("","","","")
+     var toUser : Users? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_log)
@@ -40,96 +39,77 @@ class ChatLogActivity : AppCompatActivity() {
         //val username = intent.getStringExtra(NewMessageActivity.USER_KEY)
        toUser = intent.getParcelableExtra<Users>(NewMessageActivity.USER_KEY)
         if (toUser != null){
-            supportActionBar?.title = toUser.username
+            supportActionBar?.title = toUser?.username
         }
 
-      //setupDummyData()
       listenForMessages()
 
     }
-
-
-
+// Cloud Firestore veritabanından User-Message koleksiyonundaki bilgileri güncel kullanıcıya göre text ve görüntüsünü çektik
+// Mesajlaşmak için karşılıklı mesaj yollama olaylarını ve ek olarak kullanıcıların profil görüntüsünü de gösterdik.
     private fun listenForMessages(){
-       // val chatId = database.collection("Message").document().id
-        val databaseMessage = database.collection("Message").orderBy("date",Query.Direction.ASCENDING)
-        databaseMessage.addSnapshotListener { snapshot, exception ->
-            if (exception != null){
-                exception.printStackTrace()
-                Toast.makeText(applicationContext, exception.localizedMessage, Toast.LENGTH_SHORT).show()
-            } else {
-                if (snapshot != null){
-
-                    if (!snapshot.isEmpty){
-
-                        val documentsMessage = snapshot.documents
-
-                        for (document in documentsMessage){
-
-                            val textMessage = document.get("text") as String
-                            val fromMessageId = document.get("fromMessageId") as String
-                            val toMessageId = document.get("toMessageId") as String
-                            val chatMessage = ChatMessage("",textMessage,"","")
-                            val frmMessageId = ChatMessage("","",fromMessageId,"")
-                            val toMessageID = ChatMessage("","","",toMessageId)
-                            if (textMessage != null){
-
-                                if (frmMessageId.fromMessageId == FirebaseAuth.getInstance().uid){
-                                    Log.d("ChatLogActivity", "111111111111")
-                                    Log.d("ChatLogActivity", textMessage)
-                                    val currentUser = LatestMessagesActivity.currentUser
-                                    adapter.add(ChatLogFromAdapter(chatMessage,Users(currentUser.downloadUrl)))
-                                }else {
-                                    Log.d("ChatLogActivity", "22222222222")
-
-                                    adapter.add(ChatLogToAdapter(chatMessage,toUser))
-                                }
-                            }
 
 
-                            // val fromMessage = ChatMessage("",textMessage,"","")
-                            //val fromUser = intent.getParcelableExtra<Users>(NewMessageActivity.USER_KEY)
-                            // adapter.add(ChatLogFromAdapter(fromMessage))
+        val fromMessageId = FirebaseAuth.getInstance().uid
+       // val username = intent.getParcelableExtra<Users>(NewMessageActivity.USER_KEY)
+        val toMessageId = toUser?.userId
+         val chatId = database.collection("User-Messages/$fromMessageId/$toMessageId").document().id
 
+
+        if(fromMessageId != null && toMessageId != null){
+//            val chatId = database.collection("User-Messages/$fromMessageId/$toMessageId").document().id
+            val chatId = database.collection("User-Messages/$fromMessageId/$toMessageId").document().id
+
+
+            //val databaseMessage = database.collection("User-Messages").document(fromMessageId).collection(toMessageId).orderBy("date",Query.Direction.ASCENDING)
+            val databaseMessage = database.collection("User-Messages/$fromMessageId/$toMessageId").orderBy("date",Query.Direction.ASCENDING).get().addOnSuccessListener {
+                val user = it.documents
+                user.forEach {
+
+                    val chatMessage = it.toObject(ChatMessage::class.java)
+                    if (chatMessage != null) {
+                        if (chatMessage.fromMessageId == FirebaseAuth.getInstance().uid) {
+                            val currentUser = LatestMessagesActivity.currentUser
+                            adapter.add(ChatLogFromAdapter(chatMessage.text, currentUser!!))
+                        } else {
+                            adapter.add(ChatLogToAdapter(chatMessage.text, toUser!!))
                         }
 
 
-                        // recyclerViewChatLog.adapter = adapter
-
-
-
                     }
-                }
-// TODO: 19.09.2020 LastestMessagedan güncel kullanıcı biligisini çekeceksin
 
+                }
 
             }
 
-
         }
-
 
     }
 
-
+// User-Messages Database ini  modelini oluşturduğumuz ChatMessage modeline tanımladık ve database görüntüsünü oluşturduk.
     fun performSendMessage(view: View){
 
-
-
-        val chatId = database.collection("Message").document().id
         val textMessage = enterMessageChatLogEdittext.text.toString()
-        val fromMessageId = FirebaseAuth.getInstance().uid // burası sıkıntılı
-        val username = intent.getParcelableExtra<Users>(NewMessageActivity.USER_KEY)
-        val toMessageId = username?.userId
+        val fromMessageId = FirebaseAuth.getInstance().uid
+        //val username = intent.getParcelableExtra<Users>(NewMessageActivity.USER_KEY)
+        val toMessageId = toUser?.userId
         val date = Timestamp.now()
-        val chatMessage = ChatMessage(chatId,textMessage,fromMessageId,toMessageId!!,date)
+        val chatId = database.collection("User-Messages/$fromMessageId/$toMessageId").document().id
+        val chatMessage = ChatMessage(chatId,textMessage,fromMessageId,toMessageId,date)
 
+        if (fromMessageId == null) return
 
+        val fromMessage = database.collection("User-Messages/$fromMessageId/$toMessageId").document(chatId).set(chatMessage)
+        val toMessage = database.collection("User-Messages/$toMessageId/$fromMessageId").document(chatId)
 
-        database.collection("Message").document(chatId).set(chatMessage).addOnSuccessListener {
-                Log.d("ChatLogActivity", "new Message: ${chatId!!}")
+       fromMessage.addOnSuccessListener {
+
+           enterMessageChatLogEdittext.text.clear()
+           recyclerViewChatLog.scrollToPosition((adapter.itemCount - 1))
+
         }
 
+        toMessage.set(chatMessage)
 
     }
 

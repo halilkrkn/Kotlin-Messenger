@@ -11,8 +11,14 @@ import com.example.kotlinmessengercln.registerLogin.LoginActivity
 import com.example.kotlinmessengercln.R
 import com.example.kotlinmessengercln.model.Users
 import com.example.kotlinmessengercln.registerLogin.RegisterActivity
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.*
 import com.google.firebase.storage.FirebaseStorage
 
 class LatestMessagesActivity : AppCompatActivity() {
@@ -20,12 +26,11 @@ class LatestMessagesActivity : AppCompatActivity() {
     private lateinit var mAuth : FirebaseAuth
     private lateinit var database : FirebaseFirestore
     private lateinit var storage : FirebaseStorage
-    var selectedImageUri : Uri? = null
 
     companion object{
-       var currentUser = Users()
-    }
+       var currentUser : Users? = null
 
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
@@ -44,7 +49,7 @@ class LatestMessagesActivity : AppCompatActivity() {
             startActivity(intent)
         }
         */
-        // When = switch Case gibi
+        // When = switch Case  veya if-else gibi
         when (item.itemId){
             R.id.menu_new_messages -> {
                 // new Message Activity Intent
@@ -70,8 +75,10 @@ class LatestMessagesActivity : AppCompatActivity() {
         database = FirebaseFirestore.getInstance()
         storage = FirebaseStorage.getInstance()
 
+
         fetchCurrentUser()
         //currentUser()
+
         verifyUserIsLoggedIn()
 
     }
@@ -80,13 +87,13 @@ class LatestMessagesActivity : AppCompatActivity() {
         // Eğer kayıtlı ve ilk girşini yaptıysa artık ondan sonra güncel olarak girişi yapılacak
         val currentUser = mAuth.currentUser
         if (currentUser != null){
-            // Feed Activity gönderir
+
             val intent = Intent(applicationContext,LatestMessagesActivity::class.java)
             startActivity(intent)
-             finish()
+            finish()
         }
     }
-
+// Kullanıcı doğrulaması yapıldı.
     private fun verifyUserIsLoggedIn(){
         val uid = mAuth.uid
         if (uid == null){
@@ -95,27 +102,24 @@ class LatestMessagesActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
+    // ChatLog Activityde Mesajlaşma esnasında Kullanıcın profil fotosunun gösterilmesi için
     private fun fetchCurrentUser(){
-        //val userId = database.collection("Users").document().id
-        val ref = database.collection("Users")
-        ref.addSnapshotListener { value, error ->
-            if (error != null){
-                error.printStackTrace()
-            }
-            if (value != null){
-                val documents = value.documents
-                for (document in documents){
-                    val getImageUrl = document.get("downloadUrl") as String
-
-                    currentUser = Users(getImageUrl)
-                   // Log.d("LatestMessages","Current User : ${currentUser.downloadUrl}")
+        val userId = FirebaseAuth.getInstance().uid ?: ""
 
 
-                }
+            Log.d("LatestMessage", "girdi")
 
-            }
+        val docRef = database.collection("Users").document(userId).get().addOnSuccessListener {
+
+            Log.d("LatestMessage", "onSucces " + it.id )
+
+            currentUser = it.toObject(Users::class.java)
+            Log.d("LatestMessages","Current User : ${currentUser?.downloadUrl}")
+
+
         }
-
     }
 }
+
 

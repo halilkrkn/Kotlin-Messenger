@@ -19,7 +19,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_register.*
-import java.sql.Timestamp
 import java.util.*
 
 class RegisterActivity : AppCompatActivity() {
@@ -34,6 +33,8 @@ class RegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+
+        //Yukarda tanımladığımız dosyaları initialize ediyoruz.
         storage = FirebaseStorage.getInstance()
         database = FirebaseFirestore.getInstance()
         mAuth = FirebaseAuth.getInstance()
@@ -60,7 +61,7 @@ class RegisterActivity : AppCompatActivity() {
 
     }
 
-    //Firebase Storge a Kayıt işlemleri
+    //Firebase Storge(Depoya) a Kayıt işlemleri
     fun uploadProfilPhoto(){
         //UUID : image name
 
@@ -81,7 +82,7 @@ class RegisterActivity : AppCompatActivity() {
                 uploadedPictureRefence.downloadUrl.addOnSuccessListener { uri ->
 
                     val downloadUrl = uri.toString()
-                    val userId = database.collection("Users").document().id
+                    val userId = FirebaseAuth.getInstance().uid ?:""
                     val useremail = mAuth.currentUser!!.email.toString()
                     val username = usernameRegisterEdittext.text.toString()
                     val date = com.google.firebase.Timestamp.now()
@@ -113,6 +114,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     // Kullanıcı Profil Fotosu için izinler ve SDK sürümlerine göre kullanımı
+    // İzinler i istemeden önce manifests dosyasından READ_EXTERNAL_STORAGE permission isteğini eklememiz gerekiyor.
     fun uploadPhotoRegister (view: View){
 
         //Profil Fotosunu almak için kullanıcıdan izinler istenecek.
