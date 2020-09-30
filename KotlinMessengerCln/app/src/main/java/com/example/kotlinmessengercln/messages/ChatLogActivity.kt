@@ -53,13 +53,8 @@ class ChatLogActivity : AppCompatActivity() {
         val fromMessageId = FirebaseAuth.getInstance().uid
        // val username = intent.getParcelableExtra<Users>(NewMessageActivity.USER_KEY)
         val toMessageId = toUser?.userId
-         val chatId = database.collection("User-Messages/$fromMessageId/$toMessageId").document().id
-
 
         if(fromMessageId != null && toMessageId != null){
-//            val chatId = database.collection("User-Messages/$fromMessageId/$toMessageId").document().id
-            val chatId = database.collection("User-Messages/$fromMessageId/$toMessageId").document().id
-
 
             //val databaseMessage = database.collection("User-Messages").document(fromMessageId).collection(toMessageId).orderBy("date",Query.Direction.ASCENDING)
             val databaseMessage = database.collection("User-Messages/$fromMessageId/$toMessageId").orderBy("date",Query.Direction.ASCENDING).get().addOnSuccessListener {
@@ -98,18 +93,33 @@ class ChatLogActivity : AppCompatActivity() {
         val chatMessage = ChatMessage(chatId,textMessage,fromMessageId,toMessageId,date)
 
         if (fromMessageId == null) return
+        if (toMessageId == null) return
 
+        // Karşılıklı Mesajlaşmanın olduğu ChatLogActivity için bir database oluşturduk.
         val fromMessage = database.collection("User-Messages/$fromMessageId/$toMessageId").document(chatId).set(chatMessage)
-        val toMessage = database.collection("User-Messages/$toMessageId/$fromMessageId").document(chatId)
-
-       fromMessage.addOnSuccessListener {
-
+        fromMessage.addOnSuccessListener {
            enterMessageChatLogEdittext.text.clear()
            recyclerViewChatLog.scrollToPosition((adapter.itemCount - 1))
+        }
+        // Karşılıklı Mesajlaşmanın olduğu Activity için bir database oluşturduk.
+        val toMessage = database.collection("User-Messages/$toMessageId/$fromMessageId").document(chatId)
+        toMessage.set(chatMessage).addOnSuccessListener {
 
         }
 
-        toMessage.set(chatMessage)
+        // Mesajlaşmaların son durumlarını gösteren LatestMessagesActivity için de bir database oluşturduk.
+        // Yukarıdaki database ile aynı  karmaşıklığı gidermek ve kullanımk rahatlığı oluşturmak için.
+        val latestMessagesFromRef = database.collection("latest-messages").document(chatId)
+        latestMessagesFromRef.set(chatMessage).addOnSuccessListener {
+
+        }
+
+        // Mesajlaşmaların son durumlarını gösteren LatestMessagesActivity için de bir database oluşturduk.
+        // Yukarıdaki database ile aynı  karmaşıklığı gidermek ve kullanımk rahatlığı oluşturmak için.
+        val latestMessagesToRef = database.collection("latest-messages").document(chatId)
+        latestMessagesToRef.set(chatMessage).addOnSuccessListener {
+
+        }
 
     }
 

@@ -1,18 +1,21 @@
 package com.example.kotlinmessengercln.messages
 
 import android.content.Intent
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import com.example.kotlinmessengercln.registerLogin.LoginActivity
 import com.example.kotlinmessengercln.R
+import com.example.kotlinmessengercln.adapter.ChatLogFromAdapter
+import com.example.kotlinmessengercln.adapter.ChatLogToAdapter
+import com.example.kotlinmessengercln.adapter.LatestMessagesAdapter
+import com.example.kotlinmessengercln.adapter.NewMessageGroupAdapter
+import com.example.kotlinmessengercln.model.ChatMessage
 import com.example.kotlinmessengercln.model.Users
 import com.example.kotlinmessengercln.registerLogin.RegisterActivity
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
@@ -20,6 +23,10 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.*
 import com.google.firebase.storage.FirebaseStorage
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.ViewHolder
+import kotlinx.android.synthetic.main.activity_latest_messages.*
+import kotlinx.android.synthetic.main.activity_new_message.*
 
 class LatestMessagesActivity : AppCompatActivity() {
 
@@ -31,6 +38,10 @@ class LatestMessagesActivity : AppCompatActivity() {
        var currentUser : Users? = null
 
     }
+
+    val adapter = GroupAdapter<ViewHolder>()
+    var toUser : Users? = null
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
@@ -67,6 +78,7 @@ class LatestMessagesActivity : AppCompatActivity() {
 
         return super.onOptionsItemSelected(item)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_latest_messages)
@@ -75,13 +87,17 @@ class LatestMessagesActivity : AppCompatActivity() {
         database = FirebaseFirestore.getInstance()
         storage = FirebaseStorage.getInstance()
 
+       recyclerViewLatestMessages.adapter = adapter
 
+        //setupDummyRows()
+        listenForLatestMessages()
         fetchCurrentUser()
         //currentUser()
-
         verifyUserIsLoggedIn()
 
     }
+
+
     //Kullanıcı ilk girişini yaptıktan sonra otomatik girişi yapılacak.
     fun currentUser(){
         // Eğer kayıtlı ve ilk girşini yaptıysa artık ondan sonra güncel olarak girişi yapılacak
@@ -107,12 +123,7 @@ class LatestMessagesActivity : AppCompatActivity() {
     private fun fetchCurrentUser(){
         val userId = FirebaseAuth.getInstance().uid ?: ""
 
-
-            Log.d("LatestMessage", "girdi")
-
         val docRef = database.collection("Users").document(userId).get().addOnSuccessListener {
-
-            Log.d("LatestMessage", "onSucces " + it.id )
 
             currentUser = it.toObject(Users::class.java)
             Log.d("LatestMessages","Current User : ${currentUser?.downloadUrl}")
@@ -120,6 +131,68 @@ class LatestMessagesActivity : AppCompatActivity() {
 
         }
     }
+    private fun listenForLatestMessages(){
+
+        val fromMessageId = FirebaseAuth.getInstance().uid ?:""
+        val toMessageId = toUser?.userId
+        //val chatId = database.collection("latest-messages/$fromMessageId/$toMessageId").document().id
+
+
+        val ref = database.collection("latest-messages").orderBy("date", Query.Direction.DESCENDING)
+        ref.addSnapshotListener { value, error ->
+            error?.printStackTrace()
+
+            if (value != null && !value.isEmpty){
+
+                val documents = value.documents
+                for (doc in documents){
+                    Log.d("LatestMessages","chat id: ${doc.id}")
+
+                    val chatMessage = doc.toObject(ChatMessage::class.java)
+                    if (chatMessage != null){
+                        Log.d("LatestMessages","chat messages : ${chatMessage?.text}")
+                        adapter.add(LatestMessagesAdapter(chatMessage))
+                    }
+
+
+                }
+
+
+
+
+            }
+
+
+        }
+
+
+
+
+
+
+    }
 }
+
+
+
+
+
+       
+
+
+
+
+//    private fun setupDummyRows(){
+//
+//        adapter.add(LatestMessagesAdapter())
+//        adapter.add(LatestMessagesAdapter())
+//        adapter.add(LatestMessagesAdapter())
+//        adapter.add(LatestMessagesAdapter())
+//
+//
+//    }
+
+
+
 
 

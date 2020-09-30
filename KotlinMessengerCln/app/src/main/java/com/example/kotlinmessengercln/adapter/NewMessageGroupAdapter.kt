@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.user_row_message.view.*
 // kişileri seçme bölümü
 class NewMessageGroupAdapter(val user: Users): Item<ViewHolder>(){
 
-    // Burda oluşturduğumuz layoutu tanımlayıp getirdik.
+    // Burda NewMessage Activity için oluşturdupumuz recycler view row unu oluşturduğumuz layoutu tanımlayıp getirdik.
     override fun getLayout(): Int {
         return R.layout.user_row_message
     }
