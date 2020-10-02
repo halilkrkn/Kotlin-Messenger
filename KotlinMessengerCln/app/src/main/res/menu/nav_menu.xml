@@ -2,12 +2,15 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/menu_new_messages"
+    <item
+        android:id="@+id/menu_new_messages"
+        android:icon="@android:drawable/stat_notify_chat"
         android:title="New Message"
-        app:showAsAction="ifRoom"/>
-    <item android:id="@+id/menu_sign_out"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_sign_out"
+        android:icon="@drawable/common_full_open_on_phone"
         android:title="Sign Out"
-        app:showAsAction="ifRoom"
-        />
+        app:showAsAction="ifRoom" />
 
 </menu>
