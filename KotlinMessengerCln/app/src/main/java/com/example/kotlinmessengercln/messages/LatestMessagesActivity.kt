@@ -196,49 +196,6 @@ class LatestMessagesActivity : AppCompatActivity() {
 
         }
 
-
-//        ref.addSnapshotListener { value, error ->
-//            error?.printStackTrace()
-//
-//            if (value != null && !value.isEmpty){
-//
-//                val documents = value.documents
-//                for (doc in documents){
-//                    Log.d("LatestMessages","chat id: ${doc.id}")
-//
-//                    val chatMessage = doc.toObject(ChatMessage::class.java)
-//                    if (chatMessage != null){
-//                        Log.d("LatestMessages","chat messages : ${chatMessage?.text}")
-//                        adapter.add(LatestMessagesAdapter(chatMessage))
-//                    }
-//
-//
-//                }
-//
-//
-//
-//
-//            }
-//
-//
-//        }
-
-
     }
 }
-
-
-//    private fun setupDummyRows(){
-//
-//        adapter.add(LatestMessagesAdapter())
-//        adapter.add(LatestMessagesAdapter())
-//        adapter.add(LatestMessagesAdapter())
-//        adapter.add(LatestMessagesAdapter())
-//
-//
-//    }
-
-
-
-
 
