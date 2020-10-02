@@ -69,9 +69,8 @@ class ChatLogActivity : AppCompatActivity() {
                         } else {
                             adapter.add(ChatLogToAdapter(chatMessage.text, toUser!!))
                         }
-
-
                     }
+                    recyclerViewChatLog.scrollToPosition(adapter.itemCount - 1)
 
                 }
 
