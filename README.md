@@ -7,13 +7,13 @@
 
 # #Recycler View için groupie recycler view ını kullandım. Groupie nedir? 
 
--Groupie, karmaşık RecyclerView düzenleri için basit ve esnek bir kitaplıktır.
--Bu kitaplık sayesinde karmaşık recycler view yapısını daha kolay ve basit bir hale getirmesi sağlıyor.
--Bkz: https://github.com/lisawray/groupie
+- Groupie, karmaşık RecyclerView düzenleri için basit ve esnek bir kitaplıktır.
+- Bu kitaplık sayesinde karmaşık recycler view yapısını daha kolay ve basit bir hale getirmesi sağlıyor.
+- Bkz: https://github.com/lisawray/groupie
 
 # #Picasso
 - image dosyalarının uzantılarını databaseden çekebilmek için kullandım.
--Bkz: https://square.github.io/picasso/
+- Bkz: https://square.github.io/picasso/
 
 # Kaynak: 
 - Bu projeyi Youtube da Lets Build That App kanalından izleyerek yaptım ve orada Firebase Realtime Database üzerinden yapıyorken ben ise Firebase Cloud Firestore üzerinden yapmaya çalıştım.
