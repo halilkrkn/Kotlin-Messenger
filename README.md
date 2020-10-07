@@ -1,7 +1,5 @@
 # Kotlin-Messenger Clone
-# Bu Projede Kullanılan Mimari ve Teknolojiler;
-
-# #MVVM Mimarisi Kullanıldı
+# Bu Projede Kullanılan Teknolojiler;
 
 # #Firebase
 - Cloud Firestore veritabanını kullanarak Facebook Messenger Uygulaması yapmaya çalıştım. Bu app de öncelikle Katmanlı bir mimari olarak her şeyi kendi işlevlerine göre ayırarak yaptım.
