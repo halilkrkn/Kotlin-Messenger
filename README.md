@@ -11,6 +11,9 @@
 - Bu kitaplık sayesinde karmaşık recycler view yapısını daha kolay ve basit bir hale getirmesi sağlıyor.
 - Bkz: https://github.com/lisawray/groupie
 
+#CircleImageView
+- Profil Resimleri için hızlı ve kullanışlı dairesel imageview oluşturmamıza  yarıyor.
+
 # #Picasso
 - image dosyalarının uzantılarını databaseden çekebilmek için kullandım.
 - Bkz: https://square.github.io/picasso/
