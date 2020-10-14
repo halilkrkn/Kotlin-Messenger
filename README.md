@@ -13,6 +13,7 @@
 
 # CircleImageView
 - Profil Resimleri için hızlı ve kullanışlı dairesel imageview oluşturmamıza  yarıyor.
+- Bkz: https://github.com/hdodenhof/CircleImageView
 
 # #Picasso
 - image dosyalarının uzantılarını databaseden çekebilmek için kullandım.
